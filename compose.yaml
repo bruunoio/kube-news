@@ -1,0 +1,33 @@
+services:
+    postgre:
+        container_name: kube_news_db
+        image: postgres:12.17
+        ports:
+            - "5432:5432"
+        environment:
+            POSTGRES_USER: kube_news
+            POSTGRES_PASSWORD: pg123
+            POSTGRES_DB: kubenews
+        volumes:
+            - postgre_type_vol:/var/lib/postgresql/data
+        networks:
+            - kube_news_net
+    
+    kube_news:
+        container_name: kube_news_aw
+        image: brunnoio/kube-news:v1
+        ports:
+            - 8080:8080
+        networks:
+            - kube_news_net
+        environment:
+            - DB_DATABASE=kubenews
+            - DB_USERNAME=kube_news
+            - DB_PASSWORD=pg123
+            - DB_HOST=kube_news_db
+
+volumes:
+    postgre_type_vol:
+
+networks:
+    kube_news_net:
